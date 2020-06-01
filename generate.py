@@ -20,6 +20,7 @@ QUADRANTS = [
 
 # helper functions
 def check_valid(coords, number, board):
+    number = str(number)
     row, col = coords
 
     # check row and col
@@ -59,10 +60,10 @@ def generate_board():
     for row_num in range(len(board)):
         for col_num in range(len(board)):
             if row_num == 0: # for the first row, doesnt matter what we do
-                board[row_num] = [1, 2, 3, 4]
+                board[row_num] = ["1", "2", "3", "4"]
                 random.shuffle(board[row_num])
             else: 
-                order = [1, 2, 3, 4]
+                order = ["1", "2", "3", "4"]
                 random.shuffle(order)
                 for num in order:
                     coords = (row_num, col_num)
@@ -89,7 +90,6 @@ def remove_nums(board):
         # if it can, then no unique solution = bad
         for number in range(1,5):
             if number != curr_num and check_valid(coords, number, board):
-                print(number) 
                 removable = False
         if removable:
             board[row][col] = "_"
