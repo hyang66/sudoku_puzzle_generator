@@ -1,3 +1,5 @@
+import random 
+
 '''
 overview of process:
     generate filled 2x2 board
@@ -19,22 +21,23 @@ QUADRANTS = [
 # helper functions
 def check_valid(coords, number, board):
     row, col = coords
-    # check row for same numebr
-    if number in board[row]:
-        return False
 
-    # check column for same number
-    for r in range(len(board)):
-        if number == board[row][col]:
-            return False
+    # check row and col
+    for i in range(4):
+        if i != col:
+            if board[row][i] == number:
+                return False
+        if i != row:
+            if board[i][col] == number:
+                return False
 
     # check 2x2 area
     q_num = 0
-    if row < 2 and col > 2:
+    if row < 2 and col >= 2:
         q_num = 1
-    if row > 2 and col < 2:
+    if row >= 2 and col < 2:
         q_num = 2
-    if row > 2 and col > 2:
+    if row >= 2 and col >= 2:
         q_num = 3
 
     quadrant = QUADRANTS[q_num]
@@ -50,8 +53,61 @@ def check_valid(coords, number, board):
 def generate_board():
     board = [[0 for i in range(4)] for i in range(4)]
 
-    # place each number individually
-    for number in range(4):
-        for col in range(4): # place numbers column by column
+    # probably not optimal:
+    # - generate 1 row at a time, and keep track of what is allowed
+    
+    for row_num in range(len(board)):
+        for col_num in range(len(board)):
+            if row_num == 0: # for the first row, doesnt matter what we do
+                board[row_num] = [1, 2, 3, 4]
+                random.shuffle(board[row_num])
+            else: 
+                order = [1, 2, 3, 4]
+                random.shuffle(order)
+                for num in order:
+                    coords = (row_num, col_num)
+                    if check_valid(coords, num, board):
+                        board[row_num][col_num] = num
+                        break
+
+                
 
     return board
+
+# remove numbers
+def remove_nums(board):
+    next_to_remove = [i for i in range(16)]
+    random.shuffle(next_to_remove)
+    # randomly try removing things in specific orders
+    for next_ in next_to_remove:
+        row = next_ // 4
+        col = next_ % 4
+        coords = (row, col)
+        curr_num = board[row][col]
+        removable = True
+        # check to see if it can be replace with another number
+        # if it can, then no unique solution = bad
+        for number in range(1,5):
+            if number != curr_num and check_valid(coords, number, board):
+                print(number) 
+                removable = False
+        if removable:
+            board[row][col] = "_"
+    return board
+
+def disp_board(board):
+    for row in board:
+        print(row)
+
+b = generate_board()
+disp_board(b)
+print("after removing cells:")
+disp_board(remove_nums(b))
+
+
+#           TEST CASES
+# print(check_valid((1,2), 2,
+                  # [[1,2,3,4],
+                   # [3,4,0,0],
+                   # [0,0,0,0],
+                   # [0,0,0,0]]))
