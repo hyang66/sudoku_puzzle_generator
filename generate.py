@@ -107,10 +107,10 @@ def disp_board(board):
     for row_num in range(len(board)):
         row = ""
         if row_num == 2:
-            print("________")
+            print("==========")
         for col_num in range(len(board)):
             if col_num == 2:
-                row += "|"
+                row += "|| "
             row += board[row_num][col_num] + " "
         print(row) 
 
