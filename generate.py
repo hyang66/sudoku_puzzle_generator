@@ -18,6 +18,26 @@ QUADRANTS = [
         {(2, 2), (2, 3), (3, 2), (3, 3)},
         ]
 
+def get_quadrant(row, col, n):
+    """
+    return the qudrant number that the coordinate belongs to
+    """
+    return n*(row // n) + col // n
+
+def generate_quadrants(n):
+    """
+    generate list of set of coordinates in a quadrant of an n*n board
+    where n is the number of possible values in sudoku
+    quadrants numbered starting with 0,
+    left to right, then top to bottom.
+    """
+    quadrants = [set() for i in range(n*n)]
+    dim = n*n
+    for row in range(dim):
+        for col in range(dim):
+            quadrants[get_quadrant(row, col, n)].add((row,col))
+    return quadrants
+
 # helper functions
 def check_valid(coords, number, board):
     number = str(number)
@@ -83,6 +103,7 @@ def generate_board():
 def remove_nums(board):
     more_to_remove = True
     while more_to_remove: # keep trying to remove things until nothing can be
+        # this doesnt guarantee that there will be less than 4 of a number, though
         next_to_remove = [i for i in range(16)]
         random.shuffle(next_to_remove)
         # randomly try removing things in specific orders
@@ -114,11 +135,14 @@ def disp_board(board):
             row += board[row_num][col_num] + " "
         print(row) 
 
-b = generate_board()
-disp_board(b)
-print("after removing cells:")
-disp_board(remove_nums(b))
+#           PRINT GENERATED PUZZLE
+# b = generate_board()
+# disp_board(b)
+# print("after removing cells:")
+# disp_board(remove_nums(b))
 
+print(generate_quadrants(2))
+print(generate_quadrants(3))
 
 #           TEST CASES
 # print(check_valid((1,2), 2,
