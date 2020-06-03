@@ -112,7 +112,7 @@ def disp_board(board):
             if col_num == 2:
                 row += "|"
             row += board[row_num][col_num] + " "
-            print(row) 
+        print(row) 
 
 b = generate_board()
 disp_board(b)
